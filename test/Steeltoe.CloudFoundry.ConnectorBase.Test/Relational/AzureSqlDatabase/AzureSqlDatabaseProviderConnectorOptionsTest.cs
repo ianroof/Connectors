@@ -42,7 +42,7 @@ namespace Steeltoe.CloudFoundry.Connector.AzureSqlDatabase.Test
                     ["azure-sqldb:credentials:hostName"] = "servername",
                     ["azure-sqldb:credentials:port"] = "1433",
                     ["azure-sqldb:credentials:uri"] = "mssql://servername:1433/databaseName=test_db_name",
-                    ["azure-sqldb:credentials:sqlDbName"] = "test_db_name",
+                    ["azure-sqldb:credentials:sqldbName"] = "test_db_name",
                     ["azure-sqldb:credentials:username"] = "username",
                     ["azure-sqldb:credentials:password"] = "password"
             };
@@ -66,7 +66,7 @@ namespace Steeltoe.CloudFoundry.Connector.AzureSqlDatabase.Test
                 ["azure-sqldb:credentials:hostName"] = "servername",
                 ["azure-sqldb:credentials:port"] = "1433",
                 ["azure-sqldb:credentials:uri"] = "mssql://servername:1433/databaseName=test_db_name?encrypt=true&trustServerCertificate=true&connection%20Timeout=45",
-                ["azure-sqldb:credentials:sqlDbName"] = "test_db_name",
+                ["azure-sqldb:credentials:sqldbName"] = "test_db_name",
                 ["azure-sqldb:credentials:username"] = "username",
                 ["azure-sqldb:credentials:password"] = "password"
             };

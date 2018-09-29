@@ -19,7 +19,7 @@ namespace Steeltoe.CloudFoundry.Connector.Services
     public class AzureSqlDatabaseServiceInfoFactory : ServiceInfoFactory
     {
         public AzureSqlDatabaseServiceInfoFactory()
-            : base(new Tags("azure-sqldb"), AzureSqlDatabaseServiceInfo.SQLSERVER_SCHEME)
+            : base(new Tags("azure-sqldb"), AzureSqlDatabaseServiceInfo.MSSQLSERVER_SCHEME)
         {
         }
 
@@ -35,7 +35,7 @@ namespace Steeltoe.CloudFoundry.Connector.Services
 
         public override bool Accept(Service binding)
         {
-            return TagsMatch(binding) || LabelStartsWithTag(binding);
+            return TagsMatch(binding) || LabelStartsWithTag(binding) || UriMatchesScheme(binding);
         }
 
         public override IServiceInfo Create(Service binding)
@@ -49,7 +49,7 @@ namespace Steeltoe.CloudFoundry.Connector.Services
                 string host = GetHostFromCredentials(binding.Credentials);
                 int port = GetPortFromCredentials(binding.Credentials);
 
-                string database = GetStringFromCredentials(binding.Credentials, "name");
+                string database = GetStringFromCredentials(binding.Credentials, "sqldbName");
 
                 if (host != null)
                 {

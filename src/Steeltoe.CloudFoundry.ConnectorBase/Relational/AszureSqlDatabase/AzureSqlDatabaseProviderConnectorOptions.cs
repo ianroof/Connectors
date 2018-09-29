@@ -21,7 +21,7 @@ namespace Steeltoe.CloudFoundry.Connector.AzureSqlDatabase
 {
     public class AzureSqlDatabaseProviderConnectorOptions : AbstractServiceConnectorOptions
     {
-        public const string Default_Server = ".";
+        public const string Default_Server = "localhost";
         public const int Default_Port = 1433;
         private const string AZURE_SQL_DATABASE_CREDENTIALS_SECTION_PREFIX = "azure-sqldb:credentials";
 

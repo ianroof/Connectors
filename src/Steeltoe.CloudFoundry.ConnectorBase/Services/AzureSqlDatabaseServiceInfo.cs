@@ -16,7 +16,7 @@ namespace Steeltoe.CloudFoundry.Connector.Services
 {
     public class AzureSqlDatabaseServiceInfo : UriServiceInfo
     {
-        public static readonly string[] SQLSERVER_SCHEME = { "mssql", "sqlserver", "jdbc:sqlserver" };
+        public static readonly string[] MSSQLSERVER_SCHEME = { "mssql" };
 
         public AzureSqlDatabaseServiceInfo(string id, string url)
             : base(id, url.Replace("jdbc:", string.Empty).Replace(';', '/'))

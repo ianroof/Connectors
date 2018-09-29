@@ -23,7 +23,7 @@ namespace Steeltoe.CloudFoundry.Connector.AzureSqlDatabase.EF6.Test
                     'credentials': {
                         'username': 'testuser',
                         'uri': 'mssql://testuser:testpass@azuredbtest.database.windows.net:1433/test_db_name?encrypt=true&TrustServerCertificate=true&Connection%20Timeout=30',
-                        'sqlDbName': 'test_db_name',
+                        'sqldbName': 'test_db_name',
                         'password': 'testpass'
                     },
                     'syslog_drain_url': null,
@@ -45,7 +45,7 @@ namespace Steeltoe.CloudFoundry.Connector.AzureSqlDatabase.EF6.Test
                     'credentials': {
                         'username': 'testuser',
                         'uri': 'mssql://localhost:1433/test_db_name_1',
-                        'sqlDbName': 'test_db_name_1',
+                        'sqldbName': 'test_db_name_1',
                         'password': 'testpass'
                     },
                     'syslog_drain_url': null,
@@ -61,7 +61,7 @@ namespace Steeltoe.CloudFoundry.Connector.AzureSqlDatabase.EF6.Test
                     'credentials': {
                         'username': 'testuser',
                         'uri': 'mssql://localhost:1433/test_db_name_2',
-                        'sqlDbName': 'test_db_name_2',
+                        'sqldbName': 'test_db_name_2',
                         'password': 'testpass'
                     },
                     'syslog_drain_url': null,
