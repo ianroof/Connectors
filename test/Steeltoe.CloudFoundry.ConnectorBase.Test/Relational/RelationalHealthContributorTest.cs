@@ -14,9 +14,11 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Steeltoe.CloudFoundry.Connector.AzureSqlDatabase;
 using Steeltoe.CloudFoundry.Connector.MySql;
 using Steeltoe.CloudFoundry.Connector.PostgreSql;
 using Steeltoe.CloudFoundry.Connector.Relational;
+using Steeltoe.CloudFoundry.Connector.Relational.AzureSqlDatabase;
 using Steeltoe.CloudFoundry.Connector.Relational.MySql;
 using Steeltoe.CloudFoundry.Connector.Relational.PostgreSql;
 using Steeltoe.CloudFoundry.Connector.Relational.SqlServer;
@@ -121,6 +123,63 @@ namespace Steeltoe.CloudFoundry.Connector.Test.Relational
             var sInfo = new SqlServerServiceInfo("MyId", "jdbc:sqlserver://localhost:1433;databaseName=master", "steeltoe", "steeltoe");
             var logrFactory = new LoggerFactory();
             var connFactory = new SqlServerProviderConnectorFactory(sInfo, sqlConfig, implementationType);
+            var h = new RelationalHealthContributor((IDbConnection)connFactory.Create(null), logrFactory.CreateLogger<RelationalHealthContributor>());
+
+            // act
+            var status = h.Health();
+
+            // assert
+            Assert.Equal(HealthStatus.UP, status.Status);
+        }
+
+        [Fact]
+        public void GetAzureSqlDatabaseContributor_ReturnsContributor()
+        {
+            var appsettings = new Dictionary<string, string>()
+            {
+                ["azure-sqldb:credentials:username"] = "username",
+                ["azure-sqldb:credentials:uri"] = "mssql://servername:1433/test_db_name",
+                ["azure-sqldb:credentials:sqlDbName"] = "test_db_name",
+                ["azure-sqldb:credentials:password"] = "password"
+            };
+
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddInMemoryCollection(appsettings);
+            var config = configurationBuilder.Build();
+            var contrib = RelationalHealthContributor.GetAzureSqlDatabaseContributor(config);
+            Assert.NotNull(contrib);
+            var status = contrib.Health();
+            Assert.Equal(HealthStatus.DOWN, status.Status);
+        }
+
+        [Fact]
+        public void AzureSqlDatabase_Not_Connected_Returns_Down_Status()
+        {
+            // arrange
+            Type implementationType = AzureSqlDatabaseTypeLocator.SqlConnection;
+            var azureSqlDbConfig = new AzureSqlDatabaseProviderConnectorOptions();
+            var sInfo = new AzureSqlDatabaseServiceInfo("MyId", "mssql://servername:1433/invalidDatabaseName", "Dd6O1BPXUHdrmzbP", "7E1LxXnlH2hhlPVt");
+            var logrFactory = new LoggerFactory();
+            var connFactory = new AzureSqlDatabaseProviderConnectorFactory(sInfo, azureSqlDbConfig, implementationType);
+            var h = new RelationalHealthContributor((IDbConnection)connFactory.Create(null), logrFactory.CreateLogger<RelationalHealthContributor>());
+
+            // act
+            var status = h.Health();
+
+            // assert
+            Assert.Equal(HealthStatus.DOWN, status.Status);
+            Assert.Contains(status.Details.Keys, k => k == "error");
+        }
+
+        [Fact(Skip = "Integration test - requires local db server")]
+        public void AzureSqlDatabase_Is_Connected_Returns_Up_Status()
+        {
+            // arrange
+            Type implementationType = AzureSqlDatabaseTypeLocator.SqlConnection;
+            var azureSqlDbConfig = new AzureSqlDatabaseProviderConnectorOptions();
+            var sInfo = new AzureSqlDatabaseServiceInfo("MyId", "mssql://localhost:1433/master", "steeltoe", "steeltoe");
+            var logrFactory = new LoggerFactory();
+            var connFactory = new AzureSqlDatabaseProviderConnectorFactory(sInfo, azureSqlDbConfig, implementationType);
             var h = new RelationalHealthContributor((IDbConnection)connFactory.Create(null), logrFactory.CreateLogger<RelationalHealthContributor>());
 
             // act

@@ -14,8 +14,10 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Steeltoe.CloudFoundry.Connector.AzureSqlDatabase;
 using Steeltoe.CloudFoundry.Connector.MySql;
 using Steeltoe.CloudFoundry.Connector.PostgreSql;
+using Steeltoe.CloudFoundry.Connector.Relational.AzureSqlDatabase;
 using Steeltoe.CloudFoundry.Connector.Relational.MySql;
 using Steeltoe.CloudFoundry.Connector.Relational.PostgreSql;
 using Steeltoe.CloudFoundry.Connector.Relational.SqlServer;
@@ -70,6 +72,21 @@ namespace Steeltoe.CloudFoundry.Connector.Relational
             Type sqlServerConnection = SqlServerTypeLocator.SqlConnection;
             var sqlServerConfig = new SqlServerProviderConnectorOptions(configuration);
             var factory = new SqlServerProviderConnectorFactory(info, sqlServerConfig, sqlServerConnection);
+            var connection = factory.Create(null) as IDbConnection;
+            return new RelationalHealthContributor(connection, logger);
+        }
+
+        public static IHealthContributor GetAzureSqlDatabaseContributor(IConfiguration configuration, ILogger<RelationalHealthContributor> logger = null)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            var info = configuration.GetSingletonServiceInfo<AzureSqlDatabaseServiceInfo>();
+            Type sqlServerConnection = AzureSqlDatabaseTypeLocator.SqlConnection;
+            var sqlServerConfig = new AzureSqlDatabaseProviderConnectorOptions(configuration);
+            var factory = new AzureSqlDatabaseProviderConnectorFactory(info, sqlServerConfig, sqlServerConnection);
             var connection = factory.Create(null) as IDbConnection;
             return new RelationalHealthContributor(connection, logger);
         }
@@ -130,6 +147,9 @@ namespace Steeltoe.CloudFoundry.Connector.Relational
                     break;
                 case "MySqlConnection":
                     result = "MySQL";
+                    break;
+                case "AzureSqlDatabaseConnection":
+                    result = "AzureSqlDatabase";
                     break;
             }
 
